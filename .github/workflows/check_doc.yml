@@ -1,6 +1,7 @@
 name: Check Documentation
 
 on:
+  push:
   pull_request:
     branches:
       - '*'
