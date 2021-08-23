@@ -1,6 +1,7 @@
 name: Test Unit
 
 on:
+  push:
   pull_request:
     branches:
       - '*'
