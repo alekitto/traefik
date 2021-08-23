@@ -328,6 +328,9 @@ func (p *Provider) loadConfigurationFromCRD(ctx context.Context, client Client) 
 			certs = append(certs, tls.Certificate{
 				CertFile: tls.FileOrContent(tlsSecret),
 				KeyFile:  tls.FileOrContent(tlsKey),
+				OCSP: tls.OCSPConfig{
+					DisableStapling: false,
+				},
 			})
 		}
 
@@ -879,6 +882,9 @@ func buildTLSStores(ctx context.Context, client Client) (map[string]tls.Store, m
 			tlsStore.DefaultCertificate = &tls.Certificate{
 				CertFile: tls.FileOrContent(cert),
 				KeyFile:  tls.FileOrContent(key),
+				OCSP: tls.OCSPConfig{
+					DisableStapling: false,
+				},
 			}
 		}
 
@@ -958,6 +964,9 @@ func getTLS(k8sClient Client, secretName, namespace string) (*tls.CertAndStores,
 		Certificate: tls.Certificate{
 			CertFile: tls.FileOrContent(cert),
 			KeyFile:  tls.FileOrContent(key),
+			OCSP: tls.OCSPConfig{
+				DisableStapling: false,
+			},
 		},
 	}, nil
 }

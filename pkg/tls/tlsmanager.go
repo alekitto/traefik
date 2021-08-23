@@ -81,7 +81,7 @@ func (m *Manager) UpdateConfigs(ctx context.Context, stores map[string]Store, co
 		m.stores[storeName] = store
 	}
 
-	storesCertificates := make(map[string]map[string]*tls.Certificate)
+	storesCertificates := make(map[string]map[string]*Certificate)
 	for _, conf := range certs {
 		if len(conf.Stores) == 0 {
 			if log.GetLevel() >= logrus.DebugLevel {
@@ -157,12 +157,17 @@ func (m *Manager) Get(storeName, configName string) (*tls.Config, error) {
 				return nil, nil
 			}
 
-			return certificate, nil
+			return certificate.Certificate, nil
 		}
 
 		bestCertificate := store.GetBestCertificate(clientHello)
 		if bestCertificate != nil {
-			return bestCertificate, nil
+			err := bestCertificate.StapleOCSP()
+			if err != nil {
+				log.WithoutContext().Warnf("ocsp - error during stable: %w", err)
+			}
+
+			return bestCertificate.Certificate, nil
 		}
 
 		if sniStrict {
@@ -192,8 +197,8 @@ func (m *Manager) GetCertificates() []*x509.Certificate {
 	// We iterate over all the certificates.
 	for _, store := range m.stores {
 		if store.DynamicCerts != nil && store.DynamicCerts.Get() != nil {
-			for _, cert := range store.DynamicCerts.Get().(map[string]*tls.Certificate) {
-				x509Cert, err := x509.ParseCertificate(cert.Certificate[0])
+			for _, cert := range store.DynamicCerts.Get().(map[string]*Certificate) {
+				x509Cert, err := x509.ParseCertificate(cert.Certificate.Certificate[0])
 				if err != nil {
 					continue
 				}
@@ -225,7 +230,7 @@ func (m *Manager) GetStore(storeName string) *CertificateStore {
 
 func buildCertificateStore(ctx context.Context, tlsStore Store, storename string) (*CertificateStore, error) {
 	certificateStore := NewCertificateStore()
-	certificateStore.DynamicCerts.Set(make(map[string]*tls.Certificate))
+	certificateStore.DynamicCerts.Set(make(map[string]*Certificate))
 
 	if tlsStore.DefaultCertificate != nil {
 		cert, err := buildDefaultCertificate(tlsStore.DefaultCertificate)
