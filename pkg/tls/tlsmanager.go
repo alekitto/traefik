@@ -177,7 +177,7 @@ func (m *Manager) GetCertificates() []*x509.Certificate {
 	// We iterate over all the certificates.
 	for _, store := range m.stores {
 		if store.DynamicCerts != nil && store.DynamicCerts.Get() != nil {
-			for _, cert := range store.DynamicCerts.Get().(map[string]*Certificate) {
+			for _, cert := range store.DynamicCerts.Get().(map[string]*TLSCertificate) {
 				x509Cert, err := x509.ParseCertificate(cert.Certificate.Certificate[0])
 				if err != nil {
 					continue
