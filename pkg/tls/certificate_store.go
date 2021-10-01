@@ -11,6 +11,7 @@ import (
 	"github.com/patrickmn/go-cache"
 	"github.com/traefik/traefik/v2/pkg/log"
 	"github.com/traefik/traefik/v2/pkg/safe"
+	"github.com/traefik/traefik/v2/pkg/types"
 )
 
 // CertificateStore store for dynamic certificates.
@@ -60,7 +61,7 @@ func (c CertificateStore) GetAllDomains() []string {
 
 	// Get dynamic certificates
 	if c.DynamicCerts != nil && c.DynamicCerts.Get() != nil {
-		for domain := range c.DynamicCerts.Get().(map[string]*Cert) {
+		for domain := range c.DynamicCerts.Get().(map[string]*CertificateData) {
 			allDomains = append(allDomains, domain)
 		}
 	}
@@ -69,29 +70,29 @@ func (c CertificateStore) GetAllDomains() []string {
 }
 
 // GetBestCertificate returns the best match certificate, and caches the response.
-func (c *CertificateStore) GetBestCertificate(clientHello *tls.ClientHelloInfo) *Cert {
+func (c *CertificateStore) GetBestCertificate(clientHello *tls.ClientHelloInfo) *CertificateData {
 	if c == nil {
 		return nil
 	}
-	serverName := strings.ToLower(strings.TrimSpace(clientHello.ServerName))
-	if len(serverName) == 0 {
+	domainToCheck := strings.ToLower(strings.TrimSpace(clientHello.ServerName))
+	if len(domainToCheck) == 0 {
 		// If no ServerName is provided, Check for local IP address matches
 		host, _, err := net.SplitHostPort(clientHello.Conn.LocalAddr().String())
 		if err != nil {
 			log.WithoutContext().Debugf("Could not split host/port: %v", err)
 		}
-		serverName = strings.TrimSpace(host)
+		domainToCheck = strings.TrimSpace(host)
 	}
 
-	if cert, ok := c.CertCache.Get(serverName); ok {
-		return cert.(*Cert)
+	if cert, ok := c.CertCache.Get(domainToCheck); ok {
+		return cert.(*CertificateData)
 	}
 
-	matchedCerts := map[string]*Cert{}
+	matchedCerts := map[string]*CertificateData{}
 	if c.DynamicCerts != nil && c.DynamicCerts.Get() != nil {
-		for domains, cert := range c.DynamicCerts.Get().(map[string]*Cert) {
+		for domains, cert := range c.DynamicCerts.Get().(map[string]*CertificateData) {
 			for _, certDomain := range strings.Split(domains, ",") {
-				if matchDomain(serverName, certDomain) {
+				if types.MatchDomain(domainToCheck, certDomain) {
 					matchedCerts[certDomain] = cert
 				}
 			}
@@ -107,7 +108,7 @@ func (c *CertificateStore) GetBestCertificate(clientHello *tls.ClientHelloInfo) 
 		sort.Strings(keys)
 
 		// cache best match
-		c.CertCache.SetDefault(serverName, matchedCerts[keys[len(keys)-1]])
+		c.CertCache.SetDefault(domainToCheck, matchedCerts[keys[len(keys)-1]])
 		return matchedCerts[keys[len(keys)-1]]
 	}
 
@@ -119,28 +120,4 @@ func (c CertificateStore) ResetCache() {
 	if c.CertCache != nil {
 		c.CertCache.Flush()
 	}
-}
-
-// matchDomain returns whether the server name matches the cert domain.
-// The server name, from TLS SNI, must not have trailing dots (https://datatracker.ietf.org/doc/html/rfc6066#section-3).
-// This is enforced by https://github.com/golang/go/blob/d3d7998756c33f69706488cade1cd2b9b10a4c7f/src/crypto/tls/handshake_messages.go#L423-L427.
-func matchDomain(serverName, certDomain string) bool {
-	// TODO: assert equality after removing the trailing dots?
-	if serverName == certDomain {
-		return true
-	}
-
-	for len(certDomain) > 0 && certDomain[len(certDomain)-1] == '.' {
-		certDomain = certDomain[:len(certDomain)-1]
-	}
-
-	labels := strings.Split(serverName, ".")
-	for i := range labels {
-		labels[i] = "*"
-		candidate := strings.Join(labels, ".")
-		if certDomain == candidate {
-			return true
-		}
-	}
-	return false
 }
