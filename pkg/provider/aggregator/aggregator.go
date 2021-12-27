@@ -108,6 +108,10 @@ func NewProviderAggregator(conf static.Providers) *ProviderAggregator {
 		p.quietAddProvider(conf.Ecs)
 	}
 
+	if conf.DynamoDb != nil {
+		p.quietAddProvider(conf.DynamoDb)
+	}
+
 	if conf.ConsulCatalog != nil {
 		for _, pvd := range conf.ConsulCatalog.BuildProviders() {
 			p.quietAddProvider(pvd)

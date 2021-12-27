@@ -56,6 +56,7 @@ type Service struct {
 	LoadBalancer *ServersLoadBalancer `json:"loadBalancer,omitempty" toml:"loadBalancer,omitempty" yaml:"loadBalancer,omitempty" export:"true"`
 	Weighted     *WeightedRoundRobin  `json:"weighted,omitempty" toml:"weighted,omitempty" yaml:"weighted,omitempty" label:"-" export:"true"`
 	Mirroring    *Mirroring           `json:"mirroring,omitempty" toml:"mirroring,omitempty" yaml:"mirroring,omitempty" label:"-" export:"true"`
+	Serverless   *Serverless          `json:"serverless,omitempty" toml:"serverless,omitempty" yaml:"serverless,omitempty" label:"-" export:"true"`
 	Failover     *Failover            `json:"failover,omitempty" toml:"failover,omitempty" yaml:"failover,omitempty" label:"-" export:"true"`
 }
 
@@ -82,6 +83,17 @@ type RouterTLSConfig struct {
 	Options      string         `json:"options,omitempty" toml:"options,omitempty" yaml:"options,omitempty" export:"true"`
 	CertResolver string         `json:"certResolver,omitempty" toml:"certResolver,omitempty" yaml:"certResolver,omitempty" export:"true"`
 	Domains      []types.Domain `json:"domains,omitempty" toml:"domains,omitempty" yaml:"domains,omitempty" export:"true"`
+}
+
+// +k8s:deepcopy-gen=true
+
+// Serverless holds the serverless (AWS lambda and others) configuration.
+type Serverless struct {
+	AWSRegion            string `json:"AWSRegion,omitempty" toml:"AWSRegion,omitempty" yaml:"AWSRegion,omitempty" export:"true"`
+	AWSAccessKey         string `json:"AWSAccessKey,omitempty" toml:"AWSAccessKey,omitempty" yaml:"AWSAccessKey,omitempty" export:"true"`
+	AWSSecretKey         string `json:"AWSSecretKey,omitempty" toml:"AWSSecretKey,omitempty" yaml:"AWSSecretKey,omitempty" export:"true"`
+	AWSEndpoint          string `json:"AWSEndpoint,omitempty" toml:"AWSEndpoint,omitempty" yaml:"AWSEndpoint,omitempty" export:"true"`
+	AWSLambdaFunctionArn string `json:"AWSLambdaFunctionArn,omitempty" toml:"AWSLambdaFunctionArn,omitempty" yaml:"AWSLambdaFunctionArn,omitempty" export:"true"`
 }
 
 // +k8s:deepcopy-gen=true

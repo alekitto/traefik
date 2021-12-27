@@ -16,6 +16,7 @@ import (
 	acmeprovider "github.com/traefik/traefik/v3/pkg/provider/acme"
 	"github.com/traefik/traefik/v3/pkg/provider/consulcatalog"
 	"github.com/traefik/traefik/v3/pkg/provider/docker"
+	"github.com/traefik/traefik/v3/pkg/provider/dynamodb"
 	"github.com/traefik/traefik/v3/pkg/provider/ecs"
 	"github.com/traefik/traefik/v3/pkg/provider/file"
 	"github.com/traefik/traefik/v3/pkg/provider/http"
@@ -243,6 +244,7 @@ type Providers struct {
 	ConsulCatalog          *consulcatalog.ProviderBuilder `description:"Enable ConsulCatalog backend with default settings." json:"consulCatalog,omitempty" toml:"consulCatalog,omitempty" yaml:"consulCatalog,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
 	Nomad                  *nomad.ProviderBuilder         `description:"Enable Nomad backend with default settings." json:"nomad,omitempty" toml:"nomad,omitempty" yaml:"nomad,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
 	Ecs                    *ecs.Provider                  `description:"Enable AWS ECS backend with default settings." json:"ecs,omitempty" toml:"ecs,omitempty" yaml:"ecs,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
+	DynamoDb               *dynamodb.Provider             `description:"Enable AWS DynamoDB backend with default settings." json:"dynamodb,omitempty" toml:"dynamodb,omitempty" yaml:"dynamodb,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
 	Consul                 *consul.ProviderBuilder        `description:"Enable Consul backend with default settings." json:"consul,omitempty" toml:"consul,omitempty" yaml:"consul,omitempty" label:"allowEmpty" file:"allowEmpty"  export:"true"`
 	Etcd                   *etcd.Provider                 `description:"Enable Etcd backend with default settings." json:"etcd,omitempty" toml:"etcd,omitempty" yaml:"etcd,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
 	ZooKeeper              *zk.Provider                   `description:"Enable ZooKeeper backend with default settings." json:"zooKeeper,omitempty" toml:"zooKeeper,omitempty" yaml:"zooKeeper,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`

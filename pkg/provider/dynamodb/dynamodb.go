@@ -26,12 +26,12 @@ var _ provider.Provider = (*Provider)(nil)
 
 // Provider holds configuration for provider.
 type Provider struct {
-	AccessKeyID     string `description:"The AWS credentials access key to use for making requests"`
-	RefreshSeconds  int    `description:"Polling interval (in seconds)" export:"true"`
-	Region          string `description:"The AWS region to use for requests" export:"true"`
-	SecretAccessKey string `description:"The AWS credentials secret key to use for making requests"`
-	TableName       string `description:"The AWS dynamodb table that stores configuration for traefik" export:"true"`
-	Endpoint        string `description:"The endpoint of a dynamodb. Used for testing with a local dynamodb"`
+	AccessKeyID     string `description:"The AWS credentials access key to use for making requests" json:"AccessKeyID,omitempty" toml:"AccessKeyID,omitempty" yaml:"AccessKeyID,omitempty" export:"true"`
+	RefreshSeconds  int    `description:"Polling interval (in seconds)" json:"RefreshSeconds,omitempty" toml:"RefreshSeconds,omitempty" yaml:"RefreshSeconds,omitempty" export:"true"`
+	Region          string `description:"The AWS region to use for requests" json:"Region,omitempty" toml:"Region,omitempty" yaml:"Region,omitempty" export:"true"`
+	SecretAccessKey string `description:"The AWS credentials secret key to use for making requests" json:"SecretAccessKey,omitempty" toml:"SecretAccessKey,omitempty" yaml:"SecretAccessKey,omitempty" export:"true"`
+	TableName       string `description:"The AWS dynamodb table that stores configuration for traefik" json:"TableName,omitempty" toml:"TableName,omitempty" yaml:"TableName,omitempty" export:"true"`
+	Endpoint        string `description:"The endpoint of a dynamodb. Used for testing with a local dynamodb" json:"Endpoint,omitempty" toml:"Endpoint,omitempty" yaml:"Endpoint,omitempty" export:"true"`
 }
 
 type dynamoClient struct {

@@ -31,6 +31,7 @@ import (
 	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer/failover"
 	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer/mirror"
 	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer/p2c"
+	serverlesslb "github.com/traefik/traefik/v3/pkg/server/service/loadbalancer/serverless"
 	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer/wrr"
 	"google.golang.org/grpc/status"
 )
@@ -145,6 +146,13 @@ func (m *Manager) BuildHTTP(rootCtx context.Context, serviceName string) (http.H
 			conf.AddError(err, true)
 			return nil, err
 		}
+	case conf.Serverless != nil:
+		var err error
+		lb, err = m.getServerlessServiceHandler(conf.Serverless)
+		if err != nil {
+			conf.AddError(err, true)
+			return nil, err
+		}
 	case conf.Failover != nil:
 		var err error
 		lb, err = m.getFailoverServiceHandler(ctx, serviceName, conf.Failover)
@@ -161,6 +169,10 @@ func (m *Manager) BuildHTTP(rootCtx context.Context, serviceName string) (http.H
 	m.services[serviceName] = lb
 
 	return lb, nil
+}
+
+func (m *Manager) getServerlessServiceHandler(serverless *dynamic.Serverless) (http.Handler, error) {
+	return serverlesslb.NewInvoker(serverless)
 }
 
 func (m *Manager) getFailoverServiceHandler(ctx context.Context, serviceName string, config *dynamic.Failover) (http.Handler, error) {

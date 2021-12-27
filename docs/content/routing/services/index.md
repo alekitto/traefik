@@ -1524,6 +1524,42 @@ http:
         url = "http://private-ip-server-2/"
 ```
 
+### Serverless services (AWS Lambda)
+
+Traefik is able to route the HTTP requests to serverless applications
+deployed on AWS Lambda
+
+!!! info "Supported Providers"
+
+    This strategy can be defined currently with the [File](../../providers/file.md) or [IngressRoute](../../providers/kubernetes-crd.md) providers.
+
+```yaml tab="YAML"
+## Dynamic configuration
+http:
+  services:
+    sl-api:
+      serverless:
+        AWSLambdaFunctionArn: arn:aws:lambda:eu-west-1:000000000000:function:foo-bar
+        # All the following settings are optional
+        AWSRegion: eu-west-1
+        AWSAccessKey: access-key
+        AWSSecretKey: secret-key
+        AWSEndpoint: https://aws.endpoint.com
+```
+
+```toml tab="TOML"
+## Dynamic configuration
+[http.services]
+  [http.services.sl-api]
+    [http.services.sl-api.serverless]
+      AWSLambdaFunctionArn = "arn:aws:lambda:eu-west-1:000000000000:function:foo-bar"
+      # All the following settings are optional
+      AWSRegion = "eu-west-1"
+      AWSAccessKey = "access-key"
+      AWSSecretKey = "secret-key"
+      AWSEndpoint = "https://aws.endpoint.com"
+```
+
 ## Configuring TCP Services
 
 ### General
