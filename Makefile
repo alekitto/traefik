@@ -61,6 +61,22 @@ binary: generate-webui dist
     -X github.com/traefik/traefik/v3/pkg/version.BuildDate=$(DATE)" \
     -installsuffix nocgo -o "./dist/${GOOS}/${GOARCH}/$(BIN_NAME)" ./cmd/traefik
 
+binary-linux-armv7: export GOOS := linux
+binary-linux-armv7: export GOARCH := arm
+binary-linux-armv7: export GOARM := 7
+binary-linux-armv7:
+	@$(MAKE) binary
+
+binary-linux-ppc64le: export GOOS := linux
+binary-linux-ppc64le: export GOARCH := ppc64le
+binary-linux-ppc64le:
+	@$(MAKE) binary
+
+binary-linux-s390x: export GOOS := linux
+binary-linux-s390x: export GOARCH := s390x
+binary-linux-s390x:
+	@$(MAKE) binary
+
 binary-linux-arm64: export GOOS := linux
 binary-linux-arm64: export GOARCH := arm64
 binary-linux-arm64:
