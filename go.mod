@@ -13,6 +13,7 @@ require (
 	github.com/containous/alice v0.0.0-20181107144136-d83ebdd94cbd // No tag on the repo.
 	github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e // No tag on the repo.
 	github.com/coreos/go-systemd/v22 v22.5.0
+	github.com/dgraph-io/badger/v3 v3.2103.5
 	github.com/docker/cli v27.1.1+incompatible
 	github.com/docker/docker v27.1.1+incompatible
 	github.com/docker/go-connections v0.5.0
@@ -105,6 +106,8 @@ require (
 	sigs.k8s.io/yaml v1.4.0
 )
 
+require github.com/vulcand/oxy v1.4.2
+
 require (
 	cloud.google.com/go/auth v0.9.3 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.4 // indirect
@@ -158,6 +161,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
 	github.com/bytedance/sonic v1.10.0 // indirect
+	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/civo/civogo v0.3.11 // indirect
 	github.com/cloudflare/cloudflare-go v0.104.0 // indirect
@@ -170,11 +174,13 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/deepmap/oapi-codegen v1.9.1 // indirect
 	github.com/desertbit/timer v0.0.0-20180107155436-c41aec40b27f // indirect
+	github.com/dgraph-io/ristretto v0.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dimchansky/utfbom v1.1.1 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/dnsimple/dnsimple-go v1.7.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
+	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.12.0 // indirect
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
 	github.com/exoscale/egoscale/v3 v3.1.5 // indirect
@@ -206,7 +212,10 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
+	github.com/golang/glog v1.2.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/golang/snappy v0.0.3 // indirect
+	github.com/google/flatbuffers v1.12.1 // indirect
 	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect

@@ -100,6 +100,13 @@ http:
             percent: 42
         healthCheck: {}
     Service04:
+      serverless:
+        AWSRegion: foobar
+        AWSAccessKey: foobar
+        AWSSecretKey: foobar
+        AWSEndpoint: foobar
+        AWSLambdaFunctionArn: foobar
+    Service05:
       weighted:
         services:
           - name: foobar
@@ -199,6 +206,7 @@ http:
           - foobar
           - foobar
         headerField: foobar
+        cacheTtl: 42
     Middleware11:
       grpcWeb:
         allowOrigins:
