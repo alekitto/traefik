@@ -250,6 +250,13 @@
     region = "foobar"
     accessKeyID = "foobar"
     secretAccessKey = "foobar"
+  [providers.dynamodb]
+    AccessKeyID = "foobar"
+    RefreshSeconds = 42
+    Region = "foobar"
+    SecretAccessKey = "foobar"
+    TableName = "foobar"
+    Endpoint = "foobar"
   [providers.consul]
     rootKey = "foobar"
     endpoints = ["foobar", "foobar"]

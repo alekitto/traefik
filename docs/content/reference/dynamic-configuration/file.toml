@@ -108,17 +108,24 @@
           percent = 42
         [http.services.Service03.mirroring.healthCheck]
     [http.services.Service04]
-      [http.services.Service04.weighted]
+      [http.services.Service04.serverless]
+        AWSRegion = "foobar"
+        AWSAccessKey = "foobar"
+        AWSSecretKey = "foobar"
+        AWSEndpoint = "foobar"
+        AWSLambdaFunctionArn = "foobar"
+    [http.services.Service05]
+      [http.services.Service05.weighted]
 
-        [[http.services.Service04.weighted.services]]
+        [[http.services.Service05.weighted.services]]
           name = "foobar"
           weight = 42
 
-        [[http.services.Service04.weighted.services]]
+        [[http.services.Service05.weighted.services]]
           name = "foobar"
           weight = 42
-        [http.services.Service04.weighted.sticky]
-          [http.services.Service04.weighted.sticky.cookie]
+        [http.services.Service05.weighted.sticky]
+          [http.services.Service05.weighted.sticky.cookie]
             name = "foobar"
             secure = true
             httpOnly = true
@@ -126,7 +133,7 @@
             maxAge = 42
             path = "foobar"
             domain = "foobar"
-        [http.services.Service04.weighted.healthCheck]
+        [http.services.Service05.weighted.healthCheck]
   [http.middlewares]
     [http.middlewares.Middleware01]
       [http.middlewares.Middleware01.addPrefix]
@@ -189,6 +196,7 @@
         authRequestHeaders = ["foobar", "foobar"]
         addAuthCookiesToResponse = ["foobar", "foobar"]
         headerField = "foobar"
+        cacheTtl = 42
         forwardBody = true
         maxBodySize = 42
         preserveLocationHeader = true

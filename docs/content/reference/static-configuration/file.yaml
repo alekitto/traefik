@@ -279,6 +279,13 @@ providers:
     region: foobar
     accessKeyID: foobar
     secretAccessKey: foobar
+  dynamodb:
+    AccessKeyID: foobar
+    RefreshSeconds: 42
+    Region: foobar
+    SecretAccessKey: foobar
+    TableName: foobar
+    Endpoint: foobar
   consul:
     rootKey: foobar
     endpoints:

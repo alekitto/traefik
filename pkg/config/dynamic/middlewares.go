@@ -262,6 +262,8 @@ type ForwardAuth struct {
 	// HeaderField defines a header field to store the authenticated user.
 	// More info: https://doc.traefik.io/traefik/v3.4/middlewares/http/forwardauth/#headerfield
 	HeaderField string `json:"headerField,omitempty" toml:"headerField,omitempty" yaml:"headerField,omitempty" export:"true"`
+	// CacheTTL defines for how many seconds the forward auth response should be cached.
+	CacheTTL int `json:"cacheTtl,omitempty" toml:"cacheTtl,omitempty" yaml:"cacheTtl,omitempty" export:"true"`
 	// ForwardBody defines whether to send the request body to the authentication server.
 	ForwardBody bool `json:"forwardBody,omitempty" toml:"forwardBody,omitempty" yaml:"forwardBody,omitempty" export:"true"`
 	// MaxBodySize defines the maximum body size in bytes allowed to be forwarded to the authentication server.

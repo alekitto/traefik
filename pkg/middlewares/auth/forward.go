@@ -90,8 +90,14 @@ func NewForward(ctx context.Context, next http.Handler, config dynamic.ForwardAu
 		fa.maxBodySize = *config.MaxBodySize
 	}
 
+	roundTripper, err := NewRoundTripper(config)
+	if err != nil {
+		return nil, err
+	}
+
 	// Ensure our request client does not follow redirects
 	fa.client = http.Client{
+		Transport: roundTripper,
 		CheckRedirect: func(r *http.Request, via []*http.Request) error {
 			return http.ErrUseLastResponse
 		},

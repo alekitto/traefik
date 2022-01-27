@@ -1571,15 +1571,15 @@ func (in *Service) DeepCopyInto(out *Service) {
 		*out = new(Mirroring)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Failover != nil {
-		in, out := &in.Failover, &out.Failover
-		*out = new(Failover)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.Serverless != nil {
 		in, out := &in.Serverless, &out.Serverless
 		*out = new(Serverless)
 		**out = **in
+	}
+	if in.Failover != nil {
+		in, out := &in.Failover, &out.Failover
+		*out = new(Failover)
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }
