@@ -239,6 +239,16 @@ type ErrorPage struct {
 
 // +k8s:deepcopy-gen=true
 
+// ForwardAuthCache holds the forward authentication cache configuration.
+type ForwardAuthCache struct {
+	// TTL defines for how many seconds the forward auth response should be cached.
+	TTL int64 `json:"ttl,omitempty" toml:"ttl,omitempty" yaml:"ttl,omitempty" export:"true"`
+	// Vary defines the headers to be included in the cache key.
+	Vary []string `json:"vary,omitempty" toml:"vary,omitempty" yaml:"vary,omitempty" export:"true"`
+}
+
+// +k8s:deepcopy-gen=true
+
 // ForwardAuth holds the forward auth middleware configuration.
 // This middleware delegates the request authentication to a Service.
 // More info: https://doc.traefik.io/traefik/v3.4/middlewares/http/forwardauth/
@@ -262,8 +272,8 @@ type ForwardAuth struct {
 	// HeaderField defines a header field to store the authenticated user.
 	// More info: https://doc.traefik.io/traefik/v3.4/middlewares/http/forwardauth/#headerfield
 	HeaderField string `json:"headerField,omitempty" toml:"headerField,omitempty" yaml:"headerField,omitempty" export:"true"`
-	// CacheTTL defines for how many seconds the forward auth response should be cached.
-	CacheTTL int `json:"cacheTtl,omitempty" toml:"cacheTtl,omitempty" yaml:"cacheTtl,omitempty" export:"true"`
+	// Cache defines the cache rules the forward auth responses.
+	Cache ForwardAuthCache `json:"cache,omitempty" toml:"cache,omitempty" yaml:"cache,omitempty" export:"true"`
 	// ForwardBody defines whether to send the request body to the authentication server.
 	ForwardBody bool `json:"forwardBody,omitempty" toml:"forwardBody,omitempty" yaml:"forwardBody,omitempty" export:"true"`
 	// MaxBodySize defines the maximum body size in bytes allowed to be forwarded to the authentication server.

@@ -196,7 +196,6 @@
         authRequestHeaders = ["foobar", "foobar"]
         addAuthCookiesToResponse = ["foobar", "foobar"]
         headerField = "foobar"
-        cacheTtl = 42
         forwardBody = true
         maxBodySize = 42
         preserveLocationHeader = true
@@ -207,6 +206,9 @@
           key = "foobar"
           insecureSkipVerify = true
           caOptional = true
+        [http.middlewares.Middleware10.forwardAuth.cache]
+          ttl = 42
+          vary = ["foobar", "foobar"]
     [http.middlewares.Middleware11]
       [http.middlewares.Middleware11.grpcWeb]
         allowOrigins = ["foobar", "foobar"]

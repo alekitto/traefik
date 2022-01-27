@@ -115,6 +115,54 @@ func TestForwardAuthSuccess(t *testing.T) {
 	assert.Equal(t, "traefik\n", string(body))
 }
 
+func TestCacheAuthSuccessResponse(t *testing.T) {
+	i := 0
+	h := 0
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Auth-User", "user@example.com")
+		i++
+	}))
+	t.Cleanup(server.Close)
+
+	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "user@example.com", r.Header.Get("X-Auth-User"))
+		h++
+	})
+
+	auth := dynamic.ForwardAuth{
+		Address:             server.URL,
+		AuthResponseHeaders: []string{"X-Auth-User"},
+		Cache: dynamic.ForwardAuthCache{
+			TTL:  1800,
+			Vary: []string{"Authorization"},
+		},
+	}
+	middleware, err := NewForward(context.Background(), next, auth, "authTest")
+	require.NoError(t, err)
+
+	ts := httptest.NewServer(middleware)
+	t.Cleanup(ts.Close)
+
+	req := testhelpers.MustNewRequest(http.MethodGet, ts.URL, nil)
+	res, err := http.DefaultClient.Do(req)
+	require.NoError(t, err)
+	assert.Equal(t, http.StatusOK, res.StatusCode)
+
+	req = testhelpers.MustNewRequest(http.MethodGet, ts.URL, nil)
+	_, err = http.DefaultClient.Do(req)
+	assert.Equal(t, http.StatusOK, res.StatusCode)
+	require.NoError(t, err)
+
+	req = testhelpers.MustNewRequest(http.MethodGet, ts.URL, nil)
+	_, err = http.DefaultClient.Do(req)
+	assert.Equal(t, http.StatusOK, res.StatusCode)
+	require.NoError(t, err)
+
+	assert.Equal(t, 1, i)
+	assert.Equal(t, 3, h)
+}
+
 func TestForwardAuthForwardBody(t *testing.T) {
 	data := []byte("forwardBodyTest")
 

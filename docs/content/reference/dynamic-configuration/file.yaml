@@ -223,7 +223,11 @@ http:
           - foobar
           - foobar
         headerField: foobar
-        cacheTtl: 42
+        cache:
+          ttl: 42
+          vary:
+            - foobar
+            - foobar
         forwardBody: true
         maxBodySize: 42
         preserveLocationHeader: true
