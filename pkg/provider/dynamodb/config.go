@@ -16,7 +16,7 @@ func (p *Provider) buildConfiguration(ctx context.Context, client *dynamoClient)
 	logger := log.Ctx(ctx)
 	configurations := make(map[string]*dynamic.Configuration)
 
-	items, err := p.scanTable(client, logger)
+	items, err := p.scanTable(client, *logger)
 	if err != nil {
 		return nil, err
 	}
