@@ -237,6 +237,8 @@ type ForwardAuth struct {
 	AuthRequestHeaders []string `json:"authRequestHeaders,omitempty" toml:"authRequestHeaders,omitempty" yaml:"authRequestHeaders,omitempty" export:"true"`
 	// AddAuthCookiesToResponse defines the list of cookies to copy from the authentication server response to the response.
 	AddAuthCookiesToResponse []string `json:"addAuthCookiesToResponse,omitempty" toml:"addAuthCookiesToResponse,omitempty" yaml:"addAuthCookiesToResponse,omitempty" export:"true"`
+	// CacheTTL defines for how many seconds the forward auth response should be cached.
+	CacheTTL int `json:"cacheTtl,omitempty" toml:"cacheTtl,omitempty" yaml:"cacheTtl,omitempty" export:"true"`
 }
 
 // +k8s:deepcopy-gen=true
