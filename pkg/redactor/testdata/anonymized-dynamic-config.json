@@ -240,7 +240,8 @@
           "authResponseHeadersRegex": "foo",
           "authRequestHeaders": [
             "foo"
-          ]
+          ],
+          "cache": {}
         },
         "inFlightReq": {
           "amount": 42,

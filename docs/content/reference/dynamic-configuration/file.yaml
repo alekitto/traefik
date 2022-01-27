@@ -198,7 +198,11 @@ http:
         addAuthCookiesToResponse:
           - foobar
           - foobar
-        cacheTtl: 42
+        cache:
+          ttl: 42
+          vary:
+            - foobar
+            - foobar
     Middleware11:
       grpcWeb:
         allowOrigins:
