@@ -9,42 +9,46 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
-	"os"
 	"strings"
 	"time"
 
 	"github.com/dgraph-io/badger/v3"
 	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/vulcand/oxy/forward"
 )
 
 type forwardAuthRoundTripper struct {
 	transport http.RoundTripper
 	cache     *badger.DB
 	ttl       time.Duration
+	vary      map[string]struct{}
 }
 
 // NewRoundTripper creates a caching round tripper based on middleware configuration.
 func NewRoundTripper(config dynamic.ForwardAuth) (http.RoundTripper, error) {
-	if config.CacheTTL == 0 {
+	if config.Cache.TTL == 0 {
 		return http.DefaultTransport, nil
 	}
 
-	dir, _ := ioutil.TempDir(os.TempDir(), "traefik-forward-auth")
-	badgerOptions := badger.DefaultOptions(dir).WithInMemory(true)
+	badgerOptions := badger.DefaultOptions("").WithInMemory(true)
 	db, _ := badger.Open(badgerOptions)
+
+	vary := map[string]struct{}{}
+	for _, v := range config.Cache.Vary {
+		vary[strings.ToLower(v)] = struct{}{}
+	}
 
 	rt := forwardAuthRoundTripper{
 		transport: http.DefaultTransport,
 		cache:     db,
-		ttl:       time.Duration(config.CacheTTL),
+		ttl:       time.Duration(config.Cache.TTL * int64(time.Second)),
+		vary:      vary,
 	}
 
 	return &rt, nil
 }
 
 func (frt *forwardAuthRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	cacheKey := GetCacheKey(req)
+	cacheKey := frt.GetCacheKey(req)
 	cachedResponse := frt.CachedResponse(req, cacheKey)
 	if cachedResponse != nil {
 		return cachedResponse, nil
@@ -53,6 +57,10 @@ func (frt *forwardAuthRoundTripper) RoundTrip(req *http.Request) (*http.Response
 	resp, err := frt.transport.RoundTrip(req)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return resp, nil
 	}
 
 	// Delay caching until EOF is reached.
@@ -94,20 +102,13 @@ func (frt *forwardAuthRoundTripper) CachedResponse(req *http.Request, cachedKey 
 }
 
 // GetCacheKey returns the varied cache key for req and resp.
-func GetCacheKey(req *http.Request) string {
+func (frt forwardAuthRoundTripper) GetCacheKey(req *http.Request) string {
 	var headers []string
 	method := req.Method
 	for i, v := range req.Header {
-		switch {
-		case i == xForwardedMethod:
-			method = v[0]
-			continue
-		case i == xForwardedURI:
-		case i == forward.XForwardedFor:
-		case i == forward.XForwardedServer:
-		case i == forward.XRealIp:
-			continue
-		default:
+		lower := strings.ToLower(i)
+		_, exists := frt.vary[lower]
+		if exists {
 			headers = append(headers, fmt.Sprintf("%s:%s", i, v))
 		}
 	}
@@ -151,14 +152,6 @@ func (frt *forwardAuthRoundTripper) Set(key string, value []byte) {
 	err := frt.cache.Update(func(txn *badger.Txn) error {
 		return txn.SetEntry(badger.NewEntry([]byte(key), value).WithTTL(frt.ttl))
 	})
-	if err != nil {
-		panic(fmt.Sprintf("Cannot set value into Badger, %s", err))
-	}
-
-	err = frt.cache.Update(func(txn *badger.Txn) error {
-		return txn.SetEntry(badger.NewEntry([]byte(key), value).WithTTL(frt.ttl))
-	})
-
 	if err != nil {
 		panic(fmt.Sprintf("Cannot set value into Badger, %s", err))
 	}

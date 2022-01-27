@@ -174,13 +174,15 @@
         authResponseHeadersRegex = "foobar"
         authRequestHeaders = ["foobar", "foobar"]
         addAuthCookiesToResponse = ["foobar", "foobar"]
-        cacheTtl = 42
         [http.middlewares.Middleware10.forwardAuth.tls]
           ca = "foobar"
           cert = "foobar"
           key = "foobar"
           insecureSkipVerify = true
           caOptional = true
+        [http.middlewares.Middleware10.forwardAuth.cache]
+          ttl = 42
+          vary = ["foobar", "foobar"]
     [http.middlewares.Middleware11]
       [http.middlewares.Middleware11.grpcWeb]
         allowOrigins = ["foobar", "foobar"]
