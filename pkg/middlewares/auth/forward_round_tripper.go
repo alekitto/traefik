@@ -6,19 +6,19 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
 	"strings"
 	"time"
 
-	"github.com/dgraph-io/badger/v3"
+	"github.com/shaj13/libcache"
+	_ "github.com/shaj13/libcache/arc" // needed to use arc cache
 	"github.com/traefik/traefik/v3/pkg/config/dynamic"
 )
 
 type forwardAuthRoundTripper struct {
 	transport http.RoundTripper
-	cache     *badger.DB
+	cache     libcache.Cache
 	ttl       time.Duration
 	vary      map[string]struct{}
 }
@@ -29,8 +29,8 @@ func NewRoundTripper(config dynamic.ForwardAuth) (http.RoundTripper, error) {
 		return http.DefaultTransport, nil
 	}
 
-	badgerOptions := badger.DefaultOptions("").WithInMemory(true)
-	db, _ := badger.Open(badgerOptions)
+	cache := libcache.ARC.New(1024)
+	cache.SetTTL(time.Duration(config.Cache.TTL * int64(time.Second))) // default TTL
 
 	vary := map[string]struct{}{}
 	for _, v := range config.Cache.Vary {
@@ -39,7 +39,7 @@ func NewRoundTripper(config dynamic.ForwardAuth) (http.RoundTripper, error) {
 
 	rt := forwardAuthRoundTripper{
 		transport: http.DefaultTransport,
-		cache:     db,
+		cache:     cache,
 		ttl:       time.Duration(config.Cache.TTL * int64(time.Second)),
 		vary:      vary,
 	}
@@ -68,7 +68,7 @@ func (frt *forwardAuthRoundTripper) RoundTrip(req *http.Request) (*http.Response
 		R: resp.Body,
 		OnEOF: func(r io.Reader) {
 			re := *resp
-			re.Body = ioutil.NopCloser(r)
+			re.Body = io.NopCloser(r)
 			frt.Store(&re, cacheKey)
 		},
 	}
@@ -118,25 +118,12 @@ func (frt forwardAuthRoundTripper) GetCacheKey(req *http.Request) string {
 
 // Get method returns the populated response if exists, empty response then.
 func (frt *forwardAuthRoundTripper) Get(key string) []byte {
-	var item *badger.Item
-	var result []byte
-
-	e := frt.cache.View(func(txn *badger.Txn) error {
-		i, err := txn.Get([]byte(key))
-		item = i
-		return err
-	})
-
-	if errors.Is(e, badger.ErrKeyNotFound) {
-		return result
+	if frt.cache.Contains(key) {
+		value, _ := frt.cache.Load(key)
+		return value.([]byte)
 	}
 
-	_ = item.Value(func(val []byte) error {
-		result = val
-		return nil
-	})
-
-	return result
+	return nil
 }
 
 // Store method will store the response in cache.
@@ -149,12 +136,7 @@ func (frt *forwardAuthRoundTripper) Store(resp *http.Response, key string) {
 
 // Set method will store the response in Badger provider.
 func (frt *forwardAuthRoundTripper) Set(key string, value []byte) {
-	err := frt.cache.Update(func(txn *badger.Txn) error {
-		return txn.SetEntry(badger.NewEntry([]byte(key), value).WithTTL(frt.ttl))
-	})
-	if err != nil {
-		panic(fmt.Sprintf("Cannot set value into Badger, %s", err))
-	}
+	frt.cache.StoreWithTTL(key, value, frt.ttl)
 }
 
 // cachingReadCloser is a wrapper around ReadCloser R that calls OnEOF
