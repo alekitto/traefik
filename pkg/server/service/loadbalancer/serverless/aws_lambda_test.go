@@ -37,7 +37,7 @@ func TestInvoke(t *testing.T) {
 		assert.Equal(t, map[string]string{"Content-Type": "text/plain"}, lReq.Headers)
 		assert.Equal(t, map[string][]string{"Content-Type": {"text/plain"}, "X-Test": {"foo", "foobar"}}, lReq.MultiValueHeaders)
 
-		res.WriteHeader(200)
+		res.WriteHeader(http.StatusOK)
 		_, err = res.Write([]byte("{\"statusCode\": 500}"))
 		if err != nil {
 			t.Fatal(err)
