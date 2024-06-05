@@ -3,6 +3,7 @@ package dynamodb
 import (
 	"context"
 	"errors"
+	"github.com/traefik/traefik/v3/pkg/tls"
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -103,6 +104,9 @@ func TestBuildConfigurationSuccessful(t *testing.T) {
 		UDP: &dynamic.UDPConfiguration{
 			Routers:  map[string]*dynamic.UDPRouter{},
 			Services: map[string]*dynamic.UDPService{},
+		},
+		TLS: &dynamic.TLSConfiguration{
+			Stores: map[string]tls.Store{},
 		},
 	}
 
