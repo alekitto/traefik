@@ -35,6 +35,7 @@ func (p *Provider) buildConfiguration(ctx context.Context, client *dynamoClient)
 			HTTP: &dynamic.HTTPConfiguration{},
 			TCP:  &dynamic.TCPConfiguration{},
 			UDP:  &dynamic.UDPConfiguration{},
+			TLS:  &dynamic.TLSConfiguration{},
 		}
 
 		itemName := *name.S

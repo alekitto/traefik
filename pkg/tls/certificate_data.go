@@ -24,8 +24,8 @@ import (
 // CertificateData holds runtime data for runtime TLS certificate handling.
 type CertificateData struct {
 	config       *Certificate
+	ocspLock     *sync.RWMutex
 	Certificate  *tls.Certificate
-	ocspLock     sync.RWMutex
 	MustStaple   bool
 	OCSPServer   []string
 	OCSPResponse *ocsp.Response
@@ -159,6 +159,10 @@ func getOCSPForCert(certificate *CertificateData, issuedCertificate *x509.Certif
 func (c *CertificateData) StapleOCSP() error {
 	if c.config.OCSP.DisableStapling {
 		return nil
+	}
+
+	if c.ocspLock == nil {
+		c.ocspLock = &sync.RWMutex{}
 	}
 
 	c.ocspLock.RLock()
