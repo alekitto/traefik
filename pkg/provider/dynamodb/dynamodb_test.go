@@ -106,9 +106,7 @@ func TestBuildConfigurationSuccessful(t *testing.T) {
 			Services: map[string]*dynamic.UDPService{},
 		},
 		TLS: &dynamic.TLSConfiguration{
-			Certificates: nil,
-			Options:      nil,
-			Stores:       map[string]tls.Store{},
+			Stores: map[string]tls.Store{},
 		},
 	}
 
