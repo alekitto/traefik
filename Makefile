@@ -55,7 +55,7 @@ generate:
 #? binary: Build the binary
 binary: generate-webui dist
 	@echo SHA: $(VERSION) $(CODENAME) $(DATE)
-	CGO_ENABLED=0 GOGC=${GOGC} GOOS=${GOOS} GOARCH=${GOARCH} go build ${FLAGS[*]} -ldflags "-s -w \
+	CGO_ENABLED=0 GOGC=${GOGC} GOOS=${GOOS} GOARCH=${GOARCH} GOARM=${GOARM} go build ${FLAGS[*]} -ldflags "-s -w \
     -X github.com/traefik/traefik/v3/pkg/version.Version=$(VERSION) \
     -X github.com/traefik/traefik/v3/pkg/version.Codename=$(CODENAME) \
     -X github.com/traefik/traefik/v3/pkg/version.BuildDate=$(DATE)" \
@@ -66,6 +66,8 @@ binary-linux-armv7: export GOARCH := arm
 binary-linux-armv7: export GOARM := 7
 binary-linux-armv7:
 	@$(MAKE) binary
+	@mkdir -p "./dist/${GOOS}/${GOARCH}/v${GOARM}"
+	@mv "./dist/${GOOS}/${GOARCH}/$(BIN_NAME)" "./dist/${GOOS}/${GOARCH}/v${GOARM}/"
 
 binary-linux-ppc64le: export GOOS := linux
 binary-linux-ppc64le: export GOARCH := ppc64le
