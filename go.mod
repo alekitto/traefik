@@ -80,9 +80,8 @@ require (
 	github.com/vulcand/predicate v1.2.0
 	github.com/yuin/gopher-lua v1.1.1
 	go.opentelemetry.io/collector/pdata v1.10.0
-	go.opentelemetry.io/contrib/bridges/otellogrus v0.7.0
 	go.opentelemetry.io/contrib/propagators/autoprop v0.53.0
-	go.opentelemetry.io/otel v1.34.0
+	go.opentelemetry.io/otel v1.36.0
 	go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc v0.8.0
 	go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp v0.8.0
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v1.28.0
@@ -90,17 +89,17 @@ require (
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.28.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.28.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.28.0
-	go.opentelemetry.io/otel/log v0.8.0
-	go.opentelemetry.io/otel/metric v1.34.0
+	go.opentelemetry.io/otel/log v0.12.2
+	go.opentelemetry.io/otel/metric v1.36.0
 	go.opentelemetry.io/otel/sdk v1.34.0
 	go.opentelemetry.io/otel/sdk/log v0.8.0
 	go.opentelemetry.io/otel/sdk/metric v1.34.0
-	go.opentelemetry.io/otel/trace v1.34.0
+	go.opentelemetry.io/otel/trace v1.36.0
 	golang.org/x/crypto v0.37.0
 	golang.org/x/mod v0.23.0
 	golang.org/x/net v0.39.0
 	golang.org/x/sync v0.13.0
-	golang.org/x/sys v0.32.0
+	golang.org/x/sys v0.33.0
 	golang.org/x/text v0.24.0
 	golang.org/x/time v0.11.0
 	golang.org/x/tools v0.30.0

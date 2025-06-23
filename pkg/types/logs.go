@@ -181,6 +181,10 @@ func (o *OTelLog) NewLoggerProvider() (*otelsdk.LoggerProvider, error) {
 	attr := []attribute.KeyValue{
 		semconv.ServiceNameKey.String(o.ServiceName),
 		semconv.ServiceVersionKey.String(version.Version),
+		{
+			Key:   "_stream",
+			Value: attribute.StringValue("traefik"),
+		},
 	}
 
 	for k, v := range o.ResourceAttributes {

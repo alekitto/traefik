@@ -50,11 +50,11 @@ THIS FILE MUST NOT BE EDITED BY HAND
 | `traefik/http/middlewares/Middleware10/forwardAuth/authResponseHeaders/0` | `foobar` |
 | `traefik/http/middlewares/Middleware10/forwardAuth/authResponseHeaders/1` | `foobar` |
 | `traefik/http/middlewares/Middleware10/forwardAuth/authResponseHeadersRegex` | `foobar` |
-| `traefik/http/middlewares/Middleware10/forwardAuth/forwardBody` | `true` |
-| `traefik/http/middlewares/Middleware10/forwardAuth/headerField` | `foobar` |
 | `traefik/http/middlewares/Middleware10/forwardAuth/cache/ttl` | `42` |
 | `traefik/http/middlewares/Middleware10/forwardAuth/cache/vary/0` | `foobar` |
 | `traefik/http/middlewares/Middleware10/forwardAuth/cache/vary/1` | `foobar` |
+| `traefik/http/middlewares/Middleware10/forwardAuth/forwardBody` | `true` |
+| `traefik/http/middlewares/Middleware10/forwardAuth/headerField` | `foobar` |
 | `traefik/http/middlewares/Middleware10/forwardAuth/maxBodySize` | `42` |
 | `traefik/http/middlewares/Middleware10/forwardAuth/preserveLocationHeader` | `true` |
 | `traefik/http/middlewares/Middleware10/forwardAuth/preserveRequestMethod` | `true` |
@@ -320,11 +320,11 @@ THIS FILE MUST NOT BE EDITED BY HAND
 | `traefik/http/services/Service05/weighted/services/0/weight` | `42` |
 | `traefik/http/services/Service05/weighted/services/1/name` | `foobar` |
 | `traefik/http/services/Service05/weighted/services/1/weight` | `42` |
-| `traefik/http/services/Service04/weighted/sticky/cookie/domain` | `foobar` |
+| `traefik/http/services/Service05/weighted/sticky/cookie/domain` | `foobar` |
 | `traefik/http/services/Service05/weighted/sticky/cookie/httpOnly` | `true` |
 | `traefik/http/services/Service05/weighted/sticky/cookie/maxAge` | `42` |
 | `traefik/http/services/Service05/weighted/sticky/cookie/name` | `foobar` |
-| `traefik/http/services/Service04/weighted/sticky/cookie/path` | `foobar` |
+| `traefik/http/services/Service05/weighted/sticky/cookie/path` | `foobar` |
 | `traefik/http/services/Service05/weighted/sticky/cookie/sameSite` | `foobar` |
 | `traefik/http/services/Service05/weighted/sticky/cookie/secure` | `true` |
 | `traefik/tcp/middlewares/TCPMiddleware01/ipAllowList/sourceRange/0` | `foobar` |

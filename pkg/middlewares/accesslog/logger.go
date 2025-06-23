@@ -23,7 +23,6 @@ import (
 	"github.com/traefik/traefik/v3/pkg/middlewares/capture"
 	traefiktls "github.com/traefik/traefik/v3/pkg/tls"
 	"github.com/traefik/traefik/v3/pkg/types"
-	"go.opentelemetry.io/contrib/bridges/otellogrus"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -115,7 +114,7 @@ func NewHandler(config *types.AccessLog) (*Handler, error) {
 			return nil, fmt.Errorf("setting up OpenTelemetry logger provider: %w", err)
 		}
 
-		logger.Hooks.Add(otellogrus.NewHook("traefik", otellogrus.WithLoggerProvider(otelLoggerProvider)))
+		logger.Hooks.Add(NewHook("traefik", WithLoggerProvider(otelLoggerProvider)))
 		logger.Out = io.Discard
 	}
 
