@@ -249,6 +249,7 @@ func (h *Handler) ServeHTTP(rw http.ResponseWriter, req *http.Request, next http
 
 	core[ClientAddr] = req.RemoteAddr
 	core[ClientHost], core[ClientPort] = silentSplitHostPort(req.RemoteAddr)
+	core[RequestUserAgentHeader] = req.UserAgent()
 
 	if forwardedFor := req.Header.Get("X-Forwarded-For"); forwardedFor != "" {
 		core[ClientHost] = forwardedFor
